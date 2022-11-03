@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Nov  3 17:24:15 2022
-
-@author: user
-"""
-
 import time
 import cv2
 import imutils
