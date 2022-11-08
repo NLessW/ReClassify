@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mt-20 ml-auto z-0 h-screen w-screen">
+  <div class="w-full md:w-3/5 mx-auto p-8">
+    <div class="container signup">
+      <div class="min-h-screen flex mb-4 row-signup">
+        <div class="w-3/5 h-12 row-right">
+
+          <div class="text-dig">
+            <p class="w-full text-base sm:text-lg md:text-xl text-center lg:text-2xl xl:text-5xl">
+              Assemble Your Own ReClassify
+            </p>
+            <div class="text-center mb-4 w-3/5">
+              <img src="https://cdn.dribbble.com/users/79571/screenshots/5516891/workflow_4x.png">
+            </div>
+          </div>
+        </div>
+        <div class="w-2/5  h-12 row-left">
+          <div class="form-signup-dig">
+            <div class="w-full max-w-xs">
+              <form class="max-w-md mb-4 form-input" method="post">
+                <div class="mb-6">
+                  <label class="block text-left" style="max-width: 400px">
+                    <span class="text-gray-700">ReClassify Model Option</span>
+                    <select class="form-select block w-full mt-1" name="subscription" id="subscription">
+                      <option value="0">Free</option>
+                      <option value="10">Premium</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="mb-4">
+                  <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
+                    Project Name
+                  </label>
+                  <input
+                    class="shadow appearance-none border rounded w-full h-12 py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline"
+                    id="projectName" name="projectName" type="text" placeholder="Username">
+                </div>
+                <div class="mb-auto">
+                  <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Object Name</h3>
+                  <ul
+                    class="w-48 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <li class="w-full rounded-t-lg border-b border-gray-200 dark:border-gray-600">
+                      <div class="flex items-center pl-3">
+                        <input id="vue-checkbox" type="checkbox" value="person" name="person"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                        <label for="vue-checkbox"
+                          class="py-3 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300">Person</label>
+                      </div>
+                    </li>
+                    <li class="w-full rounded-t-lg border-b border-gray-200 dark:border-gray-600">
+                      <div class="flex items-center pl-3">
+                        <input id="react-checkbox" type="checkbox" value="car" name="car"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                        <label for="react-checkbox"
+                          class="py-3 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300">Car</label>
+                      </div>
+                    </li>
+                    <li class="w-full rounded-t-lg border-b border-gray-200 dark:border-gray-600">
+                      <div class="flex items-center pl-3">
+                        <input id="angular-checkbox" type="checkbox" value="dog" name="dog"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                        <label for="angular-checkbox"
+                          class="py-3 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300">Dog</label>
+                      </div>
+                    </li>
+                    <li class="w-full rounded-t-lg border-b border-gray-200 dark:border-gray-600">
+                      <div class="flex items-center pl-3">
+                        <input id="laravel-checkbox" type="checkbox" value="cat" name="cat"
+                          class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                        <label for="laravel-checkbox"
+                          class="py-3 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300">Cat</label>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="mt-auto">
+                  <button
+                    class="bg-purple-500 text-white active:bg-purple-600 font-bold uppercase text-base px-8 py-3 rounded-full shadow-md hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="submit">
+                    Assemble
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mt-3 ml-28">
+    <h1 id="mqtt-broker-tutorial">MQTT Broker Tutorial</h1>
+<h2 id="table-of-contents">Table of contents</h2>
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#paragraph1">Example Code</a><ol>
+<li><a href="#subparagraph1">Python</a></li>
+<li>[C] (#subparagraph2)</li>
+</ol>
+</li>
+<li><a href="#paragraph2">For More Example</a></li>
+</ol>
+<h3 id="this-is-the-introduction-a-name-introduction-a-">This is the introduction <a name="introduction"></a></h3>
+<p>Here we provide short example code for you to use.
+It includes both publish and subscribe to mqtt broker.
+You must change port number, IP address and topic by your needs.
+If you need any help please Contact Customer Support.</p>
+<h3 id="example-code-a-name-paragraph1-a-">Example Code <a name="paragraph1"></a></h3>
+<p>Here are list of Example code with multiple programming Language</p>
+<h4 id="python-a-name-subparagraph1-a-">Python <a name="subparagraph1"></a></h4>
+<blockquote>
+<p>Publish</p>
+<pre><code class="lang-python"><span class="hljs-selector-id">#pub</span><span class="hljs-selector-class">.py</span>
+import paho<span class="hljs-selector-class">.mqtt</span><span class="hljs-selector-class">.client</span> as mqtt <span class="hljs-selector-id">#import</span> the client1
+import json
+import <span class="hljs-selector-tag">time</span>
+import random
+broker_address=<span class="hljs-string">"127.0.0.1"</span> 
+port=<span class="hljs-number">1883</span>
+#broker_address=<span class="hljs-string">"iot.eclipse.org"</span> <span class="hljs-selector-id">#use</span> external broker
+client = mqtt.Client() <span class="hljs-selector-id">#create</span> new instance
+<span class="hljs-selector-id">#client</span>.username_pw_set(username=<span class="hljs-string">"uou"</span>, password=<span class="hljs-string">"password"</span>)
+client.connect(broker_address, port=port) <span class="hljs-selector-id">#connect</span> to broker
+client.publish(<span class="hljs-string">"test/ie"</span>, <span class="hljs-string">"how are you doing sir"</span>)<span class="hljs-selector-id">#publish</span>
+<span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">"yes published"</span>)</span></span>
+</code></pre>
+<p>Subscribe
+```python</p>
+<p>#sub.py
+import paho.mqtt.client as mqtt</p>
+<h1 id="the-callback-for-when-the-client-receives-a-connack-response-from-the-server-">The callback for when the client receives a CONNACK response from the server.</h1>
+<p>def on_connect(client, userdata, flags, rc):
+    print(&quot;Connected with result code &quot;+str(rc))</p>
+</blockquote>
+<pre><code># <span class="hljs-keyword">Subscribing </span>in on_connect() means that <span class="hljs-meta">if</span> we lose the connection <span class="hljs-keyword">and
+</span># reconnect then <span class="hljs-keyword">subscriptions </span>will <span class="hljs-keyword">be </span>renewed.
+<span class="hljs-symbol">client.subscribe</span>(<span class="hljs-string">"ulsan/ie"</span>)
+</code></pre><h1 id="the-callback-for-when-a-publish-message-is-received-from-the-server-">The callback for when a PUBLISH message is received from the server.</h1>
+<p>def on_message(client, userdata, msg):
+    print(msg.topic+&quot; &quot;+str(msg.payload))</p>
+<p>client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message</p>
+<h1 id="client-username_pw_set-username-asdf-password-asdf-">client.username_pw_set(username=&quot;asdf&quot;, password=&quot;asdf&quot;)</h1>
+<p>client.connect(&quot;127.0.0.1&quot;, 1883, 60)</p>
+<p>client.loop_forever()</p>
+<pre><code>
+
+<span class="http">
+
+<span class="mipsasm"><span class="hljs-comment">#### C &lt;a name="subparagraph2"&gt;&lt;/a&gt;</span>
+&gt; Publish
+```c
+<span class="hljs-comment">#include &lt;stdio.h&gt;</span>
+<span class="hljs-comment">#include &lt;stdlib.h&gt;</span>
+<span class="hljs-comment">#include &lt;string.h&gt;</span>
+<span class="hljs-comment">#include "MQTTClient.h"</span>
+<span class="hljs-comment">#define ADDRESS     "tcp://localhost:1883"</span>
+<span class="hljs-comment">#define CLIENTID    "ExampleClientPub"</span>
+<span class="hljs-comment">#define TOPIC       "MQTT Examples"</span>
+<span class="hljs-comment">#define PAYLOAD     "Hello World!"</span>
+<span class="hljs-comment">#define QOS         1</span>
+<span class="hljs-comment">#define TIMEOUT     10000L</span>
+volatile MQTTClient_deliveryToken deliveredtoken<span class="hljs-comment">;</span>
+void delivered(void *<span class="hljs-built_in">context</span>, MQTTClient_deliveryToken dt)
+{
+    printf(<span class="hljs-string">"Message with token value %d delivery confirmed\n"</span>, dt)<span class="hljs-comment">;</span>
+    deliveredtoken = dt<span class="hljs-comment">;</span>
+}
+int msgarrvd(void *<span class="hljs-built_in">context</span>, char *topicName, int topicLen, MQTTClient_message *message)
+{
+    int i<span class="hljs-comment">;</span>
+    char* payloadptr<span class="hljs-comment">;</span>
+    printf(<span class="hljs-string">"Message arrived\n"</span>)<span class="hljs-comment">;</span>
+    printf(<span class="hljs-string">"     topic: %s\n"</span>, topicName)<span class="hljs-comment">;</span>
+    printf(<span class="hljs-string">"   message: "</span>)<span class="hljs-comment">;</span>
+    payloadptr = message-&gt;payload<span class="hljs-comment">;</span>
+    for(i=<span class="hljs-number">0</span><span class="hljs-comment">; i&lt;message-&gt;payloadlen; i++)</span>
+    {
+        putchar(*payloadptr++)<span class="hljs-comment">;</span>
+    }
+    putchar(<span class="hljs-string">'\n'</span>)<span class="hljs-comment">;</span>
+    MQTTClient_freeMessage(&amp;message)<span class="hljs-comment">;</span>
+    MQTTClient_free(topicName)<span class="hljs-comment">;</span>
+    return <span class="hljs-number">1</span><span class="hljs-comment">;</span>
+}
+void connlost(void *<span class="hljs-built_in">context</span>, char *<span class="hljs-built_in">cause</span>)
+{
+    printf(<span class="hljs-string">"\nConnection lost\n"</span>)<span class="hljs-comment">;</span>
+    printf(<span class="hljs-string">"     cause: %s\n"</span>, <span class="hljs-built_in">cause</span>)<span class="hljs-comment">;</span>
+}
+int main(int argc, char* argv[])
+{
+    MQTTClient client<span class="hljs-comment">;</span>
+    MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer<span class="hljs-comment">;</span>
+    MQTTClient_message pubmsg = MQTTClient_message_initializer<span class="hljs-comment">;</span>
+    MQTTClient_deliveryToken token<span class="hljs-comment">;</span>
+    int rc<span class="hljs-comment">;</span>
+    MQTTClient_create(&amp;client, <span class="hljs-keyword">ADDRESS, </span>CLIENTID,
+        MQTTCLIENT_PERSISTENCE_NONE, NULL)<span class="hljs-comment">;</span>
+    conn_opts.keepAliveInterval = <span class="hljs-number">20</span><span class="hljs-comment">;</span>
+    conn_opts.cleansession = <span class="hljs-number">1</span><span class="hljs-comment">;</span>
+    MQTTClient_setCallbacks(client, NULL, connlost, msgarrvd, delivered)<span class="hljs-comment">;</span>
+    if ((rc = MQTTClient_connect(client, &amp;conn_opts)) != MQTTCLIENT_SUCCESS)
+    {
+        printf(<span class="hljs-string">"Failed to connect, return code %d\n"</span>, rc)<span class="hljs-comment">;</span>
+        exit(EXIT_FAILURE)<span class="hljs-comment">;</span>
+    }
+    pubmsg.payload = PAYLOAD<span class="hljs-comment">;</span>
+    pubmsg.payloadlen = strlen(PAYLOAD)<span class="hljs-comment">;</span>
+    pubmsg.qos = QOS<span class="hljs-comment">;</span>
+    pubmsg.retained = <span class="hljs-number">0</span><span class="hljs-comment">;</span>
+    deliveredtoken = <span class="hljs-number">0</span><span class="hljs-comment">;</span>
+    MQTTClient_publishMessage(client, TOPIC, &amp;pubmsg, &amp;token)<span class="hljs-comment">;</span>
+    printf(<span class="hljs-string">"Waiting for publication of %s\n"</span>
+            <span class="hljs-string">"on topic %s for client with ClientID: %s\n"</span>,
+            PAYLOAD, TOPIC, CLIENTID)<span class="hljs-comment">;</span>
+    while(deliveredtoken != token)<span class="hljs-comment">;</span>
+    MQTTClient_disconnect(client, <span class="hljs-number">10000</span>)<span class="hljs-comment">;</span>
+    MQTTClient_destroy(&amp;client)<span class="hljs-comment">;</span>
+    return rc<span class="hljs-comment">;</span>
+}</span></span>
+</code></pre><blockquote>
+<p>Subscribe</p>
+<pre><code class="lang-c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"MQTTClient.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ADDRESS     <span class="hljs-meta-string">"tcp://localhost:1883"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> CLIENTID    <span class="hljs-meta-string">"ExampleClientSub"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TOPIC       <span class="hljs-meta-string">"MQTT Examples"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> PAYLOAD     <span class="hljs-meta-string">"Hello World!"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> QOS         1</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> TIMEOUT     10000L</span>
+<span class="hljs-keyword">volatile</span> MQTTClient_deliveryToken deliveredtoken;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">delivered</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *context, MQTTClient_deliveryToken dt)</span>
+</span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Message with token value %d delivery confirmed\n"</span>, dt);
+    deliveredtoken = dt;
+}
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">msgarrvd</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *context, <span class="hljs-keyword">char</span> *topicName, <span class="hljs-keyword">int</span> topicLen, MQTTClient_message *message)</span>
+</span>{
+    <span class="hljs-keyword">int</span> i;
+    <span class="hljs-keyword">char</span>* payloadptr;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Message arrived\n"</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"     topic: %s\n"</span>, topicName);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"   message: "</span>);
+    payloadptr = message-&gt;payload;
+    <span class="hljs-keyword">for</span>(i=<span class="hljs-number">0</span>; i&lt;message-&gt;payloadlen; i++)
+    {
+        <span class="hljs-built_in">putchar</span>(*payloadptr++);
+    }
+    <span class="hljs-built_in">putchar</span>(<span class="hljs-string">'\n'</span>);
+    MQTTClient_freeMessage(&amp;message);
+    MQTTClient_free(topicName);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+}
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">connlost</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *context, <span class="hljs-keyword">char</span> *cause)</span>
+</span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"\nConnection lost\n"</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"     cause: %s\n"</span>, cause);
+}
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span>* argv[])</span>
+</span>{
+    MQTTClient client;
+    MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
+    <span class="hljs-keyword">int</span> rc;
+    <span class="hljs-keyword">int</span> ch;
+    MQTTClient_create(&amp;client, ADDRESS, CLIENTID,
+        MQTTCLIENT_PERSISTENCE_NONE, <span class="hljs-literal">NULL</span>);
+    conn_opts.keepAliveInterval = <span class="hljs-number">20</span>;
+    conn_opts.cleansession = <span class="hljs-number">1</span>;
+    MQTTClient_setCallbacks(client, <span class="hljs-literal">NULL</span>, connlost, msgarrvd, delivered);
+    <span class="hljs-keyword">if</span> ((rc = MQTTClient_connect(client, &amp;conn_opts)) != MQTTCLIENT_SUCCESS)
+    {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Failed to connect, return code %d\n"</span>, rc);
+        <span class="hljs-built_in">exit</span>(EXIT_FAILURE);
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Subscribing to topic %s\nfor client %s using QoS%d\n\n"</span>
+           <span class="hljs-string">"Press Q&lt;Enter&gt; to quit\n\n"</span>, TOPIC, CLIENTID, QOS);
+    MQTTClient_subscribe(client, TOPIC, QOS);
+    <span class="hljs-keyword">do</span>
+    {
+        ch = getchar();
+    } <span class="hljs-keyword">while</span>(ch!=<span class="hljs-string">'Q'</span> &amp;&amp; ch != <span class="hljs-string">'q'</span>);
+    MQTTClient_disconnect(client, <span class="hljs-number">10000</span>);
+    MQTTClient_destroy(&amp;client);
+    <span class="hljs-keyword">return</span> rc;
+}
+</code></pre>
+</blockquote>
+<h3 id="another-paragraph-a-name-paragraph2-a-">Another paragraph <a name="paragraph2"></a></h3>
+<p>Here is the link for official mqtt api supported language
+<a href="https://www.eclipse.org/paho/index.php?page=downloads.php">MQTT</a></p>
+
+</div>
+
+{% endblock %}

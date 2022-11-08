@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReClassify</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{url_for('static',filename='css/main.css')}}">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+    <div class="fixed top-0 left-0 h-screen w-24 m-0 flex flex-col bg-gray-900 text-white shadow z-50">
+        {% if is_logged_in() %}
+        <i class="group relative flex items-center justify-center h-20 w-20 mt-2 mb-2 mx-auto shadow-lg bg-gray-800 hover:bg-green-600 rounded-lg transition-all duration-300 ease-linear cursor-pointer" onclick="window.location.href={{url_for('profile_view')}}"><span class="fa fa-id-badge fa-2x"></span><span class="absolute w-auto p-2 m-2 min-w-max left-20 rounded-md shadow-md text-white bg-gray-900 text-sm font-bold transition-all duration-100 origin-left opacity-0 group-hover:opacity-100">Profile</span></i>
+        {% if counter > 0 %}
+        {% for ct in ct_body %}
+
+          <i class="group relative flex items-center justify-center h-20 w-20 mt-2 mb-2 mx-auto shadow-lg bg-gray-800 hover:bg-green-600 rounded-lg transition-all duration-300 ease-linear cursor-pointer" ><a href="{{ url_for('topicDisplay', projectName=ct['projectName'], userID=ct['userID']) }}"><span class="fa fa-bug fa-2x" style="color: white;"></span><span class="absolute w-auto p-2 m-2 min-w-max left-20 rounded-md shadow-md text-white bg-gray-900 text-sm font-bold transition-all duration-100 origin-left opacity-0 group-hover:opacity-100">{{ct['projectName']}}</span></a></i>
+        {% endfor %}
+        <i class="group relative flex items-center justify-center h-20 w-20 mt-2 mb-2 mx-auto shadow-lg bg-gray-800 hover:bg-green-600 rounded-lg transition-all duration-300 ease-linear cursor-pointer" ><a href="{{ url_for('help')}}"><span class="fa fa-question-circle fa-2x" style="color: white;"></span><span class="absolute w-auto p-2 m-2 min-w-max left-20 rounded-md shadow-md text-white bg-gray-900 text-sm font-bold transition-all duration-100 origin-left opacity-0 group-hover:opacity-100">Help</span></a></i>
+        {% endif %}
+        {% if is_admin == 1 %}
+        <i class="group relative flex items-center justify-center h-20 w-20 mt-2 mb-2 mx-auto shadow-lg bg-gray-800 hover:bg-green-600 rounded-lg transition-all duration-300 ease-linear cursor-pointer" onclick="window.location.href={{url_for('viewAC')}}"><span class="fa fa-users-cog fa-2x"></span><span class="absolute w-auto p-2 m-2 min-w-max left-20 rounded-md shadow-md text-white bg-gray-900 text-sm font-bold transition-all duration-100 origin-left opacity-0 group-hover:opacity-100">User Config</span></i>
+        {% endif %}
+        <i class="group relative flex items-center justify-center h-20 w-20 mt-2 mb-2 mx-auto shadow-lg bg-gray-800 hover:bg-green-600 rounded-lg transition-all duration-300 ease-linear cursor-pointer" onclick="window.location.href={{url_for('create_container')}}"><span class="fa fa-plus fa-2x"></span><span class="absolute w-auto p-2 m-2 min-w-max left-20 rounded-md shadow-md text-white bg-gray-900 text-sm font-bold transition-all duration-100 origin-left opacity-0 group-hover:opacity-100">Assemble</span></i>
+        {% else %}
+        <i class="group relative flex items-center justify-center h-20 w-20 mt-2 mb-2 mx-auto shadow-lg bg-gray-800 hover:bg-green-600 rounded-lg transition-all duration-300 ease-linear cursor-pointer" onclick="window.location.href={{url_for('home')}}"><span class="fa fa-home fa-2x"></span><span class="absolute w-auto p-2 m-2 min-w-max left-20 rounded-md shadow-md text-white bg-gray-900 text-sm font-bold transition-all duration-100 origin-left opacity-0 group-hover:opacity-100">Home</span></i>
+        <i class="group relative flex items-center justify-center h-20 w-20 mt-2 mb-2 mx-auto shadow-lg bg-gray-800 hover:bg-green-600 rounded-lg transition-all duration-300 ease-linear cursor-pointer" onclick="window.location.href={{url_for('simplelogin.login')}}"><span class="fa fa-key fa-2x" ></span><span class="absolute w-auto p-2 m-2 min-w-max left-20 rounded-md shadow-md text-white bg-gray-900 text-sm font-bold transition-all duration-100 origin-left opacity-0 group-hover:opacity-100">Login</span></i>
+        {% endif %}
+        <!-- <i class="relative flex items-center justify-center h-20 w-20 mt-2 mb-2 mx-auto shadow-lg bg-gray-800 text-green-500">E</i> -->
+    </div>
+    {% block content %}{% endblock %}
+
+</body>
+
+</html>
