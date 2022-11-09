@@ -49,18 +49,24 @@ class VideoCamera(object):
         data = base64.b64decode(packet,' /')
         npdata = np.fromstring(data,dtype=np.uint8)
         frame = cv2.imdecode(npdata,1)
-
+        
         # Object Detect
         classIds, confs, bbox = net.detect(frame, confThreshold=0.5)
-        print(classIds, bbox)
+        #print(classIds, bbox)
+        r_dic = []
         if len(classIds) != 0:
             for classId, confidence,box in zip(classIds.flatten(),confs.flatten(),bbox):
                 cv2.rectangle(frame,box,color=(0,255,0),thickness=2)
                 cv2.putText(frame, c_Names[classId-1].upper(),(box[0]+10, box[1]+30),cv2.FONT_HERSHEY_COMPLEX,1,(0,255,0), 2)
                 cv2.putText(frame, str(round(confidence*100,2)),(box[0]+200, box[1]+30),cv2.FONT_HERSHEY_COMPLEX,1,(0,255,0), 2)
-                print("Name : " + c_Names[classId-1]+"\n Accuracy : " + str(round(confidence*100,2) ))
+                #print("Name : " + c_Names[classId-1]+"\n정확도 : " + str(round(confidence*100,2) ))
+                r_dicR = {"Name" : str(c_Names[classId-1]), "Acc" : str(round(confidence*100,2)), "Locate" :  str(bbox)}
+                r_dic.append(r_dicR)
+                
+             
         ret, jpeg = cv2.imencode('.jpg', frame)
-        
+        with open('Detect_Data.json','w') as f:
+                json.dump(r_dic, f, indent=4)  
         
         data = None #Data is information about classification in json form or dict
         self.__send_frame(data if data != None else {"data": "data"})
