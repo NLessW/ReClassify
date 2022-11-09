@@ -5,8 +5,12 @@ import numpy as np
 import base64
 import paho.mqtt.client as mqtt #import the client1
 import json
+from matplotlib import pyplot as plt
+
 
 class VideoCamera(object):
+    
+    
     def __init__(self, port, mIP, mPort, token):
         self.token = token
         self.client = mqtt.Client() #create new instance
@@ -29,12 +33,35 @@ class VideoCamera(object):
         self.client.publish(topicLink, json.dumps(data))#publish
 
     def get_frame(self):
+        c_Names = []
+        c_File = 'coco.names'
+        with open(c_File,'rt') as f:
+            c_Names = f.read().rstrip('\n').split('\n')
+        confPath = 'ssd_mobilenet_v3_large_coco_2020_01_14.pbtxt'
+        weiPath = 'frozen_inference_graph.pb'
+
+        net = cv2.dnn_DetectionModel(weiPath, confPath)
+        net.setInputSize(320,320)
+        net.setInputScale(1.0/ 127.5)
+        net.setInputMean((127.5, 127.5, 127.5))
+        net.setInputSwapRB(True)
         packet,_ = self.client_socket.recvfrom(self.BUFF_SIZE)
         data = base64.b64decode(packet,' /')
         npdata = np.fromstring(data,dtype=np.uint8)
         frame = cv2.imdecode(npdata,1)
-        # DO WHAT YOU WANT WITH TENSORFLOW / KERAS AND OPENCV
+
+        # Object Detect
+        classIds, confs, bbox = net.detect(frame, confThreshold=0.5)
+        print(classIds, bbox)
+        if len(classIds) != 0:
+            for classId, confidence,box in zip(classIds.flatten(),confs.flatten(),bbox):
+                cv2.rectangle(frame,box,color=(0,255,0),thickness=2)
+                cv2.putText(frame, c_Names[classId-1].upper(),(box[0]+10, box[1]+30),cv2.FONT_HERSHEY_COMPLEX,1,(0,255,0), 2)
+                cv2.putText(frame, str(round(confidence*100,2)),(box[0]+200, box[1]+30),cv2.FONT_HERSHEY_COMPLEX,1,(0,255,0), 2)
+                print("Name : " + c_Names[classId-1]+"\n Accuracy : " + str(round(confidence*100,2) ))
         ret, jpeg = cv2.imencode('.jpg', frame)
+        
+        
         data = None #Data is information about classification in json form or dict
         self.__send_frame(data if data != None else {"data": "data"})
         return jpeg.tobytes()
