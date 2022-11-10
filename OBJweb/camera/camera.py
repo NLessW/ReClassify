@@ -60,14 +60,19 @@ class VideoCamera(object):
                 cv2.putText(frame, c_Names[classId-1].upper(),(box[0]+10, box[1]+30),cv2.FONT_HERSHEY_COMPLEX,1,(0,255,0), 2)
                 cv2.putText(frame, str(round(confidence*100,2)),(box[0]+200, box[1]+30),cv2.FONT_HERSHEY_COMPLEX,1,(0,255,0), 2)
                 #print("Name : " + c_Names[classId-1]+"\n정확도 : " + str(round(confidence*100,2) ))
-                r_dicR = {"Name" : str(c_Names[classId-1]), "Acc" : str(round(confidence*100,2)), "Locate" :  str(bbox)}
+                x1=str(box[0])
+                y1=str(box[1])
+                x2=str(box[2])
+                y2=str(box[3])
+                r_locateR = {"x1" : x1, "y1" : y1, "x2" : x2, "y2" : y2}
+                r_dicR = {"Name" : str(c_Names[classId-1]), "Acc" : str(round(confidence*100,2)) , "Locate" : r_locateR}
                 r_dic.append(r_dicR)
                 
              
         ret, jpeg = cv2.imencode('.jpg', frame)
-        with open('Detect_Data.json','w') as f:
-                json.dump(r_dic, f, indent=4)  
+        #with open('Detect_Data.json','w') as f:
+            #json.dump(r_dic, f, indent=4)  
         
-        data = None #Data is information about classification in json form or dict
+        data = r_dic
         self.__send_frame(data if data != None else {"data": "data"})
         return jpeg.tobytes()
