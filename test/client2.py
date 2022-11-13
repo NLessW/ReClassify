@@ -3,15 +3,19 @@ import cv2, imutils, socket
 import base64
 import threading
 import paho.mqtt.client as mqtt
+import argparse
 
 
-def videoSending():
+
+
+
+def videoSending(porty):
 	BUFF_SIZE = 65536
 	server_socket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 	server_socket.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF,BUFF_SIZE)
-	host_ip = '127.0.0.1'#  socket.gethostbyname(host_name)
+	host_ip = 'sshmein.ekstrah.com'#  socket.gethostbyname(host_name)
 	print(host_ip)
-	port = 9999
+	port = porty
 	socket_address = (host_ip,port)
 	message = b'hello'
 	server_socket.sendto(message,(host_ip,port))
@@ -55,13 +59,18 @@ def mqttHandler():
 	mqttc.on_connect = on_connect
 	mqttc.on_publish = on_publish
 	mqttc.on_subscribe = on_subscribe
-	mqttc.connect("127.0.0.1", 9881, 60)
+	mqttc.connect("sshmein.ekstrah.com", 9881, 60)
 	mqttc.subscribe("#", 0) # That symbole will be replaced with token
 
 	mqttc.loop_forever()
 
 if __name__ == "__main__":
-	t1 = threading.Thread(target=videoSending)
+	
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--port", type=int)
+	args = parser.parse_args()
+	porty = args.port
+	t1 = threading.Thread(target=videoSending, args=(porty))
 	t2 = threading.Thread(target=mqttHandler)
 	t1.start()
 	t2.start()

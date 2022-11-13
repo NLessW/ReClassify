@@ -10,6 +10,9 @@ import json
 from datetime import datetime
 import pandas as pd
 import random
+import docker
+
+clientD = docker.from_env()
 
 new_init_account = {
   'userName': "ekstrah",
@@ -123,7 +126,7 @@ def is_admin():
     resp_body = []
     for container in containers:
         projectName = container['projectName']
-        port = container['port']
+        port = container['Cport']
         t_dict = {'userID': user, 'port': port, 'projectName': projectName, 'Status': 'Active'}
         resp_body.append(t_dict)
         count = count + 1
@@ -157,11 +160,12 @@ def get_role(user):
 def topicDisplay(userID, projectName):
     if request.method == 'GET':
         data = projectCollection.find_one({"projectName": projectName})
-        port = data['port']
+        port = data['Wport']
+        portc = data['Cport']
         tier = data['subscription']
         modelList = data['models']
         token = data['token']
-        return render_template("container.html", token=token, port=port, pub_ip=pub_ip, tier=tier, modelList=modelList, projectName=projectName)
+        return render_template("container.html", portc=portc, token=token, port=port, pub_ip=pub_ip, tier=tier, modelList=modelList, projectName=projectName)
     if request.method == "POST":
         projectCollection.delete_one({'projectName': projectName})
         return render_template("index_home.html")
@@ -201,6 +205,14 @@ def viewAC():
         unVerifiedAccount.append(account["userName"])
     return render_template("edit_user.html", allAccount=allAccount, unVerifiedAccount=unVerifiedAccount)
 
+
+def create_Container(ocport, webport, token):
+    imageName = "ekstrah/objweb:latest"
+    port_dict = {str(webport)+"/tcp" : ('0.0.0.0', webport), str(ocport)+"/udp" :('0.0.0.0', ocport)}
+    commandT = str(webport) + " " + str(ocport) + " 9881 " + token
+    container = clientD.containers.run(image=imageName, command=commandT, detach=True, ports=port_dict)
+
+
 @app.route("/createC/", methods=["POST", "GET"])
 @login_required()
 def create_container():
@@ -226,8 +238,10 @@ def create_container():
         if 'cat' in data:
             modelList.append('cat')
         sData['models'] = modelList
-        sData['port'] = random.randint(10000, 20000)
+        sData['Wport'] = random.randint(10000, 20000)
+        sData['Cport'] = random.randint(10000, 20000)
         sData['token'] = secrets.token_hex(nbytes=12)
+        create_Container(sData['Cport'], sData['Wport'], sData['token'])
         projectCollection.insert_one(sData)
         return render_template("createProject.html", userID = username)
 
@@ -246,4 +260,4 @@ def help():
     return redirect('https://ekstrah.notion.site/MQTT-Broker-Wiki-37f0516e51834a1590912f81cb5348ff')
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    app.run(debug=True, host='0.0.0.0', port=5000)

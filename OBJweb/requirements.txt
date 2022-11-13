@@ -2,3 +2,4 @@ flask
 paho-mqtt
 numpy
 opencv-python
+matplotlib
