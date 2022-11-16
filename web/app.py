@@ -15,12 +15,12 @@ import docker
 clientD = docker.from_env()
 
 new_init_account = {
-  'userName': "ekstrah",
-  'password': "ulsan2015",
+  'userName': "Input Username",
+  'password': "Input Password",
   'role': 5,
   'allowed_container': 100,
   "csrf_token": "None",
-  "email": "dongho@ekstrah.com",
+  "email": "Input email",
 }
 # client = pymongo.MongoClient('14.44.101.64:27017', username="ekstrah", password="KCg@9Oi1sk#j5h")
 client = pymongo.MongoClient('127.0.0.1:27018')
